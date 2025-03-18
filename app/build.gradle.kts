@@ -10,7 +10,7 @@ android {
 
     defaultConfig {
         applicationId = "com.example.tfgfernando"
-        minSdk = 30
+        minSdk = 33
         targetSdk = 35
         versionCode = 1
         versionName = "1.0"
@@ -40,7 +40,7 @@ android {
 }
 
 dependencies {
-
+    implementation("androidx.health.connect:connect-client:1.1.0-beta01")
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(libs.androidx.activity.compose)
