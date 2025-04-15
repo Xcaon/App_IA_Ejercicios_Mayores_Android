@@ -20,6 +20,7 @@ import androidx.health.connect.client.request.ReadRecordsRequest
 import androidx.health.connect.client.time.TimeRangeFilter
 import androidx.lifecycle.lifecycleScope
 import com.example.tfgfernando.navigation.MyApp
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 import java.time.Duration
 import java.time.Instant
@@ -27,7 +28,7 @@ import java.time.ZoneOffset
 
 const val providerPackageName = "com.google.android.apps.healthdata"
 
-
+@AndroidEntryPoint
 class MainActivity : ComponentActivity() {
 
 

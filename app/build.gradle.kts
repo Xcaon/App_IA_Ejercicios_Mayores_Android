@@ -53,11 +53,8 @@ dependencies {
     implementation("com.github.skydoves:landscapist-glide:2.2.5")
     implementation("com.github.bumptech.glide:compose:1.0.0-beta01")
 
-//    // Coil
-//    implementation("io.coil-kt:coil-compose:2.4.0")
-
-    implementation("com.google.dagger:hilt-android:2.48")
-    kapt("com.google.dagger:hilt-android-compiler:2.48")
+    implementation("com.google.dagger:hilt-android:2.52")
+    kapt("com.google.dagger:hilt-android-compiler:2.52")
     implementation("androidx.hilt:hilt-navigation-compose:1.2.0")
 
     implementation("androidx.navigation:navigation-compose:2.8.9")

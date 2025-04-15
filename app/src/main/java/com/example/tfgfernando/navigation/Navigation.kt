@@ -10,16 +10,19 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.tfgfernando.activities.ExercisesScreen.MostrarEjercicios
+import com.example.tfgfernando.activities.ExercisesScreen.ViewModelExercises
 import com.example.tfgfernando.activities.FormScreen.FormularioActivityCompose
 
 
 @Composable
 fun MyApp() {
     val navController = rememberNavController()
+    val viewModelDetalle: ViewModelExercises = hiltViewModel<ViewModelExercises>()
 
     Scaffold(
         bottomBar = { MyBottomNavigation(navController) }
@@ -30,15 +33,38 @@ fun MyApp() {
             startDestination = RutasEnum.FORM.nombre,
             modifier = Modifier.padding(innerPadding)
         ) {
-            composable(RutasEnum.FORM.nombre) { Column(Modifier.fillMaxSize().background(Color.White), verticalArrangement =  Arrangement.Center) {
-                FormularioActivityCompose(navController)
-            } }
-            composable(RutasEnum.EXERCISES.nombre) { Column(Modifier.fillMaxSize().background(Color.Green), verticalArrangement =  Arrangement.Center) {
-                MostrarEjercicios()
-            } }
-            composable(RutasEnum.SUMMARY.nombre) { Column(Modifier.fillMaxSize().background(Color.Green), verticalArrangement =  Arrangement.Center) {
-                Text("Esto son las summary")
-            } }
+            composable(RutasEnum.FORM.nombre) {
+                Column(
+                    Modifier
+                        .fillMaxSize()
+                        .background(Color.White),
+                    verticalArrangement = Arrangement.Center
+                ) {
+                    FormularioActivityCompose(navController)
+                }
+            }
+            composable(
+                route = RutasEnum.EXERCISES.nombre
+            ) {
+                Column(
+                    Modifier
+                        .fillMaxSize()
+                        .background(Color.White),
+                    verticalArrangement = Arrangement.Center
+                ) {
+                    MostrarEjercicios()
+                }
+            }
+            composable(RutasEnum.SUMMARY.nombre) {
+                Column(
+                    Modifier
+                        .fillMaxSize()
+                        .background(Color.White),
+                    verticalArrangement = Arrangement.Center
+                ) {
+                    Text("Esto son las summary")
+                }
+            }
         }
 
 

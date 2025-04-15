@@ -26,14 +26,15 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
-import com.example.data.DataRepository
 import com.example.data.FormData
+import com.example.tfgfernando.activities.ExercisesScreen.ViewModelExercises
 import com.example.tfgfernando.navigation.RutasEnum
 
 @Composable
 fun FormularioActivityCompose(navController: NavController){
-
+    val viewModel: ViewModelExercises = hiltViewModel()
     val chronicDiseases = remember { mutableStateListOf<String>() }
     val mobilityProblems = remember { mutableStateOf(false) }
     val objectives = remember { mutableStateListOf<String>() }
@@ -42,6 +43,8 @@ fun FormularioActivityCompose(navController: NavController){
     val age = remember { mutableStateOf("") }
 
     val scrollState = rememberScrollState()
+
+
 
     Column(
     modifier = Modifier
@@ -209,11 +212,10 @@ fun FormularioActivityCompose(navController: NavController){
                     age = age.value
                 )
 
-                DataRepository.addSubmission(formData)
-
-                // Navegar automaticamente a la siguiente pantalla
-
+                viewModel.setPersonalizadoFormData(formData)
                 navController.navigate(RutasEnum.EXERCISES.nombre)
+
+
             },
             modifier = Modifier
                 .fillMaxWidth()
