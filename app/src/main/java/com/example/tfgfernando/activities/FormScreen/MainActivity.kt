@@ -1,4 +1,4 @@
-package com.example.tfgfernando
+package com.example.tfgfernando.activities.FormScreen
 
 import android.app.Activity
 import android.content.Intent
@@ -8,30 +8,25 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.result.ActivityResultLauncher
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material3.Text
-import androidx.compose.ui.Alignment
-import androidx.compose.ui.Modifier
-
 import androidx.health.connect.client.HealthConnectClient
 import com.example.tfgfernando.ui.theme.TfgFernandoTheme
-import androidx.core.net.toUri
 import androidx.health.connect.client.PermissionController
 import androidx.health.connect.client.permission.HealthPermission
 import androidx.health.connect.client.records.HeartRateRecord
 import androidx.health.connect.client.records.StepsRecord
 import androidx.health.connect.client.records.metadata.Device
+import androidx.health.connect.client.records.metadata.Metadata
 import androidx.health.connect.client.request.ReadRecordsRequest
 import androidx.health.connect.client.time.TimeRangeFilter
 import androidx.lifecycle.lifecycleScope
+import com.example.tfgfernando.navigation.MyApp
 import kotlinx.coroutines.launch
 import java.time.Duration
 import java.time.Instant
 import java.time.ZoneOffset
 
 const val providerPackageName = "com.google.android.apps.healthdata"
+
 
 class MainActivity : ComponentActivity() {
 
@@ -72,19 +67,21 @@ class MainActivity : ComponentActivity() {
         }
 
         // Leemos los datos
-        readStepsByTimeRange(healthConnectClient!!, Instant.now().minus(Duration.ofHours(1)), Instant.now())
+        readStepsByTimeRange(
+            healthConnectClient!!,
+            Instant.now().minus(Duration.ofHours(1)),
+            Instant.now()
+        )
+
+
+
 
 
         // Compose Vista
         setContent {
             TfgFernandoTheme {
-                Column(
-                    modifier = Modifier.fillMaxSize(),
-                    verticalArrangement = Arrangement.Center,
-                    horizontalAlignment = Alignment.CenterHorizontally
-                ) {
-                    Text("hola")
-                }
+                // Iniciamos el menu inferior
+                MyApp()
             }
         }
     }
@@ -103,9 +100,10 @@ class MainActivity : ComponentActivity() {
                             timeRangeFilter = TimeRangeFilter.between(startTime, endTime)
                         )
                     )
-                for (stepRecord in response.records) {
+                for (stepRecord: StepsRecord in response.records) {
                     // Process each step record
-                    Log.i("HealthConnect", stepRecord.toString())
+                    Log.i("HealthConnect", stepRecord.count.toString())
+
                 }
             } catch (e: Exception) {
                 // Run error handling here.
@@ -147,7 +145,7 @@ class MainActivity : ComponentActivity() {
             context.startActivity(
                 Intent(Intent.ACTION_VIEW).apply {
                     setPackage("com.android.vending")
-                    data = uriString.toUri()
+//                    Intent.setData = uriString.toUri() TODO() Esta mierda ha dejado de funcionar por la cara
                     putExtra("overlay", true)
                     putExtra("callerId", context.packageName)
                 }
@@ -178,7 +176,7 @@ class MainActivity : ComponentActivity() {
                     endTime = endTime,
                     startZoneOffset = ZoneOffset.UTC,
                     endZoneOffset = ZoneOffset.UTC,
-                    metadata = androidx.health.connect.client.records.metadata.Metadata.autoRecorded(
+                    metadata = Metadata.autoRecorded(
                         device
                     ),
                 )
@@ -190,7 +188,7 @@ class MainActivity : ComponentActivity() {
         }
 
     }
-
-
 }
+
+
 
