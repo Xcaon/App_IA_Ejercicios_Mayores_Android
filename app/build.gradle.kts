@@ -4,6 +4,7 @@ plugins {
     alias(libs.plugins.kotlin.compose)
     id("com.google.dagger.hilt.android")
     id("kotlin-kapt")
+    id("com.google.gms.google-services")
 }
 
 android {
@@ -44,6 +45,9 @@ android {
 
 dependencies {
 
+    // Boom FireBase, Gestor de versiones de librerias firebase
+    implementation(platform("com.google.firebase:firebase-bom:33.13.0"))
+    implementation("com.google.firebase:firebase-firestore")
     // Json
     implementation("com.google.code.gson:gson:2.13.0")
 

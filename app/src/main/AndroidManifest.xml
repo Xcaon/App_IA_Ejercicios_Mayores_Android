@@ -22,16 +22,6 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.TfgFernando">
         <activity
-            android:name=".activities.SummaryScreen.SummaryActivity"
-            android:exported="false"
-            android:label="@string/title_activity_summary"
-            android:theme="@style/Theme.TfgFernando" />
-        <activity
-            android:name=".activities.ExercisesScreen.ExercisesActivity"
-            android:exported="false"
-            android:label="@string/title_activity_exercises"
-            android:theme="@style/Theme.TfgFernando" />
-        <activity
             android:name=".activities.FormScreen.MainActivity"
             android:exported="true"
             android:theme="@style/Theme.TfgFernando">

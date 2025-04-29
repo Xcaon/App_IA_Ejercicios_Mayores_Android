@@ -27,6 +27,7 @@ import javax.inject.Inject
 @HiltViewModel
 class ViewModelExercises @Inject constructor() : ViewModel() {
 
+    // Lista de ejercicio que nos devuelve chatGpt
     val _exercises = MutableStateFlow<List<Exercise>>(listadoEjercicios)
     val exercises : StateFlow<List<Exercise>> = _exercises.asStateFlow()
 
@@ -71,11 +72,19 @@ class ViewModelExercises @Inject constructor() : ViewModel() {
 
                 var ejerciciosFiltrados : List<Exercise>  = listadoEjercicios.filter { it.title in titulosRecomendados }
 
+                Log.i("OpenAI", "Se han filtrado los ejercicios $ejerciciosFiltrados")
                 _exercises.value = ejerciciosFiltrados
+
+                // Si no esta vacio
+                _exercises.value.let { ejercicios : List<Exercise> ->
+                    if (_exercises.value.isNotEmpty()) {
+                        Log.i("OpenAI", "Se han encontrado ejercicios")
+                    }
+                }
 
 
             } catch (e: Exception){
-                Log.i("OpenAI", "Error al parsear el JSON")
+                Log.i("OpenAI", "Error al parsear el JSON ${e.message}")
             }
 
         }
