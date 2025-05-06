@@ -14,11 +14,14 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.State
 import androidx.compose.runtime.collectAsState
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -49,28 +52,47 @@ fun SaludComposable() {
             Column(modifier = Modifier.weight(1f)) {
                 Text(fontWeight = FontWeight.Bold ,textAlign = TextAlign.Center, text = "Pasos")
                 Spacer(modifier = Modifier.height(8.dp))
-                Card (modifier = Modifier.height(100.dp).fillMaxWidth(), colors = CardDefaults.cardColors(containerColor = Color.White),
-                    elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)) {
-                    Text(text = "Cantidad de pasos")
-                    Text(text = "Has dado " + pasos.value + " pasos hoy")
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .background(Color.White)
+                        .shadow(1.dp, shape = RoundedCornerShape(2.dp))
+                ) {
+                    Column(modifier = Modifier.padding(12.dp)) {
+                        Text(fontSize = 16.sp, text = "Recorrido", style = MaterialTheme.typography.bodyMedium)
+                        Text(lineHeight = 14.sp, fontSize = 14.sp,text = "Has caminado ${pasos.value} pasos hoy", style = MaterialTheme.typography.bodyLarge)
+                    }
                 }
                 Spacer(modifier = Modifier.height(24.dp))
 
                 Text(fontWeight = FontWeight.Bold ,textAlign = TextAlign.Center,text = "Distancia")
                 Spacer(modifier = Modifier.height(8.dp))
-                Card (modifier = Modifier.height(100.dp).fillMaxWidth(), colors = CardDefaults.cardColors(containerColor = Color.White),
-                    elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)) {
-                    Text(text = "Distancia recorrida \n ${distancia.value} metros")
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .background(Color.White)
+                        .shadow(1.dp, shape = RoundedCornerShape(2.dp))
+                ) {
+                    Column(modifier = Modifier.padding(12.dp)) {
+                        Text(fontSize = 16.sp, text = "Distancia", style = MaterialTheme.typography.bodyMedium)
+                        Text(lineHeight = 14.sp, fontSize = 14.sp,text = "Has recorrido ${distancia.value} metros", style = MaterialTheme.typography.bodyLarge)
+                    }
                 }
             }
             Spacer(modifier = Modifier.width(32.dp))
             Column(modifier = Modifier.weight(1f).fillMaxWidth()) {
                 Text(fontWeight = FontWeight.Bold ,textAlign = TextAlign.Center,text = "Calorias quemadas")
                 Spacer(modifier = Modifier.height(8.dp))
-                Card (modifier = Modifier.height(100.dp).fillMaxWidth(), colors = CardDefaults.cardColors(containerColor = Color.White),
-                    elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)) {
-                    Text(text = "Cantidad")
-                    Text(text = "Has quemado ${calories.value} Calorias")
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .background(Color.White)
+                        .shadow(1.dp, shape = RoundedCornerShape(2.dp))
+                ) {
+                    Column(modifier = Modifier.padding(12.dp)) {
+                        Text(fontSize = 16.sp, text = "Cantidad", style = MaterialTheme.typography.bodyMedium)
+                        Text(lineHeight = 14.sp, fontSize = 14.sp,text = "Has quemado ${calories.value} kCal", style = MaterialTheme.typography.bodyLarge)
+                    }
                 }
 
             }

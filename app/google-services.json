@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "197541221300",
+    "project_id": "tfgfernando-77db3",
+    "storage_bucket": "tfgfernando-77db3.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:197541221300:android:5728b5fa628c118d8918e1",
+        "android_client_info": {
+          "package_name": "com.example.tfgfernando"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC24yvPCaPTKkflp1pBnL1ki4RQlARoyis"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
