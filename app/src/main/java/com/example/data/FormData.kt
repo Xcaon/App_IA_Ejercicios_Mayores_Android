@@ -9,7 +9,10 @@ data class FormData (
     val objectives: SnapshotStateList<String> = mutableStateListOf(),
     val exercisedRecently: Boolean = false,
     val weight: String = "70",
-    val age: String = "40"
+    val age: String = "40",
+    val pasos: String = "1000",
+    val distancia: String = "1000",
+    val calories: String = "1000"
 )
 
 

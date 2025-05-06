@@ -94,7 +94,7 @@ fun Card(idEjercicio: String) {
     ) {
         Spacer(modifier = Modifier.height(16.dp))
         Text(
-            lineHeight = 14.sp,
+            lineHeight = 18.sp,
             fontSize = 24.sp,
             fontWeight = FontWeight.Bold,
             text = ejercicio.title

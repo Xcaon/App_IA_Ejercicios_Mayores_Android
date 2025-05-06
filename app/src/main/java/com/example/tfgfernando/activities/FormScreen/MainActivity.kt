@@ -12,14 +12,19 @@ import androidx.health.connect.client.HealthConnectClient
 import com.example.tfgfernando.ui.theme.TfgFernandoTheme
 import androidx.health.connect.client.PermissionController
 import androidx.health.connect.client.permission.HealthPermission
+import androidx.health.connect.client.records.DistanceRecord
+import androidx.health.connect.client.records.ExerciseSessionRecord
 import androidx.health.connect.client.records.HeartRateRecord
 import androidx.health.connect.client.records.StepsRecord
+import androidx.health.connect.client.records.TotalCaloriesBurnedRecord
 import androidx.health.connect.client.records.metadata.Device
 import androidx.health.connect.client.records.metadata.Metadata
 import androidx.health.connect.client.request.ReadRecordsRequest
 import androidx.health.connect.client.response.ReadRecordResponse
 import androidx.health.connect.client.response.ReadRecordsResponse
 import androidx.health.connect.client.time.TimeRangeFilter
+import androidx.health.connect.client.units.Energy
+import androidx.health.connect.client.units.Length
 import androidx.lifecycle.lifecycleScope
 import com.example.tfgfernando.navigation.MyApp
 import dagger.hilt.android.AndroidEntryPoint
@@ -36,10 +41,24 @@ class MainActivity : ComponentActivity() {
 
     val PERMISSIONS =
         setOf(
+            // Permisos para HeartRate
             HealthPermission.getReadPermission(HeartRateRecord::class),
             HealthPermission.getWritePermission(HeartRateRecord::class),
+
+            // Permisos para Steps (pasos)
             HealthPermission.getReadPermission(StepsRecord::class),
-            HealthPermission.getWritePermission(StepsRecord::class)
+            HealthPermission.getWritePermission(StepsRecord::class),
+
+            // Permisos para Distance (distancia recorrida)
+            HealthPermission.getReadPermission(DistanceRecord::class),
+            HealthPermission.getWritePermission(DistanceRecord::class),
+
+            // Permisos para Calories (calorías quemadas)
+            HealthPermission.getReadPermission(TotalCaloriesBurnedRecord::class),
+            HealthPermission.getWritePermission(TotalCaloriesBurnedRecord::class),
+
+            HealthPermission.getReadPermission(TotalCaloriesBurnedRecord::class),
+            HealthPermission.getWritePermission(TotalCaloriesBurnedRecord::class)
         )
 
 
@@ -80,6 +99,10 @@ class MainActivity : ComponentActivity() {
 //                Instant.now().minus(Duration.ofHours(1)),
 //                Instant.now()
 //            )
+
+        // Esto nos sirve para simular datos
+        // insertSteps(healthConnectClient)
+
 
         // Aqui arranca la aplicacion
         setContent {
@@ -161,7 +184,34 @@ class MainActivity : ComponentActivity() {
                         device
                     ),
                 )
-                healthConnectClient!!.insertRecords(listOf(stepsRecord))
+
+                val distanceRecord = DistanceRecord(
+                    distance = Length.meters(200.0),
+                    startTime = startTime,
+                    endTime = endTime,
+                    startZoneOffset = ZoneOffset.UTC,
+                    endZoneOffset = ZoneOffset.UTC,
+                    metadata = Metadata.autoRecorded(
+                        device
+                    )
+                )
+
+                // Calorías quemadas: 150 kcal
+                val caloriesRecord = TotalCaloriesBurnedRecord(
+                    energy = Energy.kilocalories(150.0),
+                    startTime = startTime,
+                    endTime = endTime,
+                    startZoneOffset = ZoneOffset.UTC,
+                    endZoneOffset = ZoneOffset.UTC,
+                    metadata = Metadata.autoRecorded(
+                        device
+                    )
+                )
+
+                healthConnectClient!!.insertRecords(
+                    listOf(stepsRecord, distanceRecord, caloriesRecord)
+                )
+
             } catch (e: Exception) {
                 // Run error handling here
                 Log.e("HealthConnect", "Error inserting steps", e)
@@ -188,5 +238,40 @@ suspend fun readStepsByTimeRange(
     }
 }
 
+suspend fun readDistanceByTimeRange(
+    healthConnectClient: HealthConnectClient,
+    startTime: Instant,
+    endTime: Instant
+): ReadRecordsResponse<DistanceRecord> {
+    return try {
+        healthConnectClient.readRecords(
+            ReadRecordsRequest(
+                DistanceRecord::class,
+                timeRangeFilter = TimeRangeFilter.between(startTime, endTime)
+            )
+        )
+    } catch (e: Exception) {
+        Log.e("HealthConnect", "Error reading distance", e)
+        throw e
+    }
+}
+
+suspend fun readCaloriesByTimeRange(
+    healthConnectClient: HealthConnectClient,
+    startTime: Instant,
+    endTime: Instant
+): ReadRecordsResponse<TotalCaloriesBurnedRecord> {
+    return try {
+        healthConnectClient.readRecords(
+            ReadRecordsRequest(
+                TotalCaloriesBurnedRecord::class,
+                timeRangeFilter = TimeRangeFilter.between(startTime, endTime)
+            )
+        )
+    } catch (e: Exception) {
+        Log.e("HealthConnect", "Error reading calories", e)
+        throw e
+    }
+}
 
 

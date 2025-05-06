@@ -21,6 +21,7 @@ import com.example.tfgfernando.activities.DetalleScreen.MostrarActividadDetalle
 import com.example.tfgfernando.activities.ExercisesScreen.MostrarEjercicios
 import com.example.tfgfernando.activities.ExercisesScreen.ViewModelExercises
 import com.example.tfgfernando.activities.FormScreen.FormularioActivityCompose
+import com.example.tfgfernando.activities.SaludScreen.SaludComposable
 import com.example.tfgfernando.activities.SummaryScreen.MostrarHistorial
 
 
@@ -78,7 +79,7 @@ fun MyApp() {
                         .background(Color.White),
                     verticalArrangement = Arrangement.Center
                 ) {
-                    Text(text = "Salud")
+                    SaludComposable()
                 }
             }
 

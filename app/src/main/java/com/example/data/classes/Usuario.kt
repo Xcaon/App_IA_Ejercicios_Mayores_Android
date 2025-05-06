@@ -9,5 +9,8 @@ data class Usuario(
     var problemasSalud: List<String>,
     var ejerciciosRecientes: Boolean,
     var problemasMovilidad: Boolean,
-    var peso: Int
+    var peso: Int,
+    var pasosDiarios: String,
+    var caloriasQuemadas: String,
+    var distanciaRecorrida: String
 )

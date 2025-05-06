@@ -10,7 +10,7 @@ data class RecomendacionInput(
     val usuario: Usuario? = null,
     val ejerciciosDisponibles: List<ExerciseResumen> = emptyList<ExerciseResumen>()
 ){
-    fun getRecomendacion(input: FormData): String {
+    fun getRecomendacion(input: FormData, pasoss: String, distancia: String, calorias: String): String {
         val gson = Gson()
 
         val usuario = Usuario(
@@ -21,7 +21,10 @@ data class RecomendacionInput(
             problemasSalud = listOf(input.chronicDiseases.toString()),
             problemasMovilidad = input.mobilityProblems,
             peso = input.weight.toInt(),
-            ejerciciosRecientes = input.exercisedRecently
+            ejerciciosRecientes = input.exercisedRecently,
+            pasosDiarios = pasoss,
+            caloriasQuemadas = calorias,
+            distanciaRecorrida = distancia
         )
 
         // Le pasamos solo los datos que le interesa al chatgpt

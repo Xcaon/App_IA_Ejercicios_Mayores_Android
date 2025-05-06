@@ -1,6 +1,8 @@
 package com.example.tfgfernando.activities.ExercisesScreen
 
 import android.util.Log
+import androidx.health.connect.client.records.StepsRecord
+import androidx.health.connect.client.response.ReadRecordsResponse
 import androidx.lifecycle.ViewModel
 import com.aallam.openai.api.chat.ChatCompletion
 import com.aallam.openai.api.chat.ChatCompletionRequest
@@ -18,6 +20,8 @@ import com.example.data.classes.Exercise.Companion.listadoEjercicios
 import com.example.model.firebase.firestore.firestoreManager
 import com.example.tfgfernando.activities.FormScreen.MainActivity
 import com.example.tfgfernando.activities.FormScreen.MainActivity.Companion.healthConnectClient
+import com.example.tfgfernando.activities.FormScreen.readCaloriesByTimeRange
+import com.example.tfgfernando.activities.FormScreen.readDistanceByTimeRange
 import com.example.tfgfernando.activities.FormScreen.readStepsByTimeRange
 import com.example.tfgfernando.navigation.RutasEnum
 import com.google.gson.Gson
@@ -38,29 +42,57 @@ class ViewModelExercises @Inject constructor(val firestore: firestoreManager) : 
     val _exercises = MutableStateFlow<List<Exercise>>(emptyList())
     val exercises: StateFlow<List<Exercise>> = _exercises.asStateFlow()
 
+    val _pasos = MutableStateFlow<String>("")
+    val pasos: StateFlow<String> = _pasos.asStateFlow()
+
+    val _distancia = MutableStateFlow<String>("")
+    val distancia: StateFlow<String> = _distancia.asStateFlow()
+
+    val _calories = MutableStateFlow<String>("")
+    val calories: StateFlow<String> = _calories.asStateFlow()
+
     var formData: FormData = FormData()
 
     fun setPersonalizadoFormData(formData: FormData) {
         this.formData = formData
     }
 
-    // Obtenemos los ejercicios en base a la api de OpenAI
-    fun getExercises() {
-
-
+    fun getDatosHealthConnect() {
 
         viewModelScope.launch {
 
-
-            var pasosLeidos = readStepsByTimeRange(
+            var pasosLeidos: ReadRecordsResponse<StepsRecord> = readStepsByTimeRange(
                 healthConnectClient,
                 Instant.now().minus(Duration.ofHours(24)),
                 Instant.now()
             )
 
-            Log.i("HealthConnect", "Se han leido ${pasosLeidos.records.size} pasos")
+            var distancia = readDistanceByTimeRange(
+                healthConnectClient, Instant.now().minus(Duration.ofHours(24)),
+                Instant.now()
+            )
 
-            var inputJson = RecomendacionInput().getRecomendacion(formData)
+            var calories = readCaloriesByTimeRange(
+                healthConnectClient,
+                Instant.now().minus(Duration.ofHours(24)),
+                Instant.now()
+            )
+
+
+            _pasos.value = pasosLeidos.records.sumOf { it.count }.toString()
+            _distancia.value = distancia.records.sumOf { it.distance.inMeters }.toString()
+            _calories.value = calories.records.sumOf { it.energy.inKilocalories }.toString()
+
+        }
+    }
+
+    // Obtenemos los ejercicios en base a la api de OpenAI
+    fun getExercises() {
+
+        viewModelScope.launch {
+
+            getDatosHealthConnect()
+            var inputJson = RecomendacionInput().getRecomendacion(formData, pasos.value, distancia.value, calories.value)
 
             var completion: ChatCompletion = openIAManager().openai.chatCompletion(
                 ChatCompletionRequest(
