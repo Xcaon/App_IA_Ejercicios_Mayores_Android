@@ -17,6 +17,8 @@ import androidx.health.connect.client.records.StepsRecord
 import androidx.health.connect.client.records.metadata.Device
 import androidx.health.connect.client.records.metadata.Metadata
 import androidx.health.connect.client.request.ReadRecordsRequest
+import androidx.health.connect.client.response.ReadRecordResponse
+import androidx.health.connect.client.response.ReadRecordsResponse
 import androidx.health.connect.client.time.TimeRangeFilter
 import androidx.lifecycle.lifecycleScope
 import com.example.tfgfernando.navigation.MyApp
@@ -55,63 +57,41 @@ class MainActivity : ComponentActivity() {
                 Log.e("HealthConnect", "Permisos denegados")
             }
         }
+    companion object {
+        lateinit var healthConnectClient: HealthConnectClient
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
 
         // Comprobamos que la app de Health Connect este instalada
-        var healthConnectClient = healthCheckStatus(context = this)
+        if (healthCheckStatus(context = this) != null) {
+            healthConnectClient = healthCheckStatus(context = this)!!
+        }
 
         if (healthConnectClient != null) {
             checkPermissionsAndRun(healthConnectClient)
         }
 
-        // Leemos los datos
-        readStepsByTimeRange(
-            healthConnectClient!!,
-            Instant.now().minus(Duration.ofHours(1)),
-            Instant.now()
-        )
 
+//            var pasosLeidos = readStepsByTimeRange(
+//                healthConnectClient!!,
+//                Instant.now().minus(Duration.ofHours(1)),
+//                Instant.now()
+//            )
 
-
-
-
-        // Compose Vista
+        // Aqui arranca la aplicacion
         setContent {
             TfgFernandoTheme {
                 // Iniciamos el menu inferior
                 MyApp()
             }
         }
+
     }
 
-    private fun readStepsByTimeRange(
-        healthConnectClient: HealthConnectClient,
-        startTime: Instant,
-        endTime: Instant
-    ) {
-        lifecycleScope.launch {
-            try {
-                val response =
-                    healthConnectClient.readRecords(
-                        ReadRecordsRequest(
-                            StepsRecord::class,
-                            timeRangeFilter = TimeRangeFilter.between(startTime, endTime)
-                        )
-                    )
-                for (stepRecord: StepsRecord in response.records) {
-                    // Process each step record
-                    Log.i("HealthConnect", stepRecord.count.toString())
 
-                }
-            } catch (e: Exception) {
-                // Run error handling here.
-                Log.e("HealthConnect", "Error reading steps", e)
-            }
-        }
-    }
 
     fun checkPermissionsAndRun(healthConnectClient: HealthConnectClient) {
         lifecycleScope.launch {
@@ -187,7 +167,24 @@ class MainActivity : ComponentActivity() {
                 Log.e("HealthConnect", "Error inserting steps", e)
             }
         }
+    }
+}
 
+suspend fun readStepsByTimeRange(
+    healthConnectClient: HealthConnectClient,
+    startTime: Instant,
+    endTime: Instant
+): ReadRecordsResponse<StepsRecord> {
+    return try {
+        healthConnectClient.readRecords(
+            ReadRecordsRequest(
+                StepsRecord::class,
+                timeRangeFilter = TimeRangeFilter.between(startTime, endTime)
+            )
+        )
+    } catch (e: Exception) {
+        Log.e("HealthConnect", "Error reading steps", e)
+        throw e // o maneja el error de otra forma si quieres devolver algo alternativo
     }
 }
 

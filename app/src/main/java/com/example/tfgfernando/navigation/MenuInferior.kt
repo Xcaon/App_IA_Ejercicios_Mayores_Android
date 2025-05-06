@@ -3,8 +3,10 @@ package com.example.tfgfernando.navigation
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Dataset
 import androidx.compose.material.icons.filled.DateRange
+import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.FitnessCenter
 import androidx.compose.material.icons.filled.Home
+import androidx.compose.material.icons.filled.MonitorHeart
 import androidx.compose.material.icons.filled.Notifications
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.icons.filled.Settings
@@ -86,6 +88,27 @@ fun MyBottomNavigation(navController: NavHostController) {
                 Icon(
                     imageVector = Icons.Default.Search,
                     contentDescription = "seguidos"
+                )
+            })
+
+        NavigationBarItem(
+            selected = index == 3,
+            onClick = {
+                index = 3
+                navController.navigate(RutasEnum.SALUD.nombre) {
+
+                    // launchSingleTop = true indica al NavController que si la pantalla Home ya está en la
+                    // parte superior del back stack, no se creará una nueva instancia. En su lugar, se reutilizará la instancia existente.
+                    launchSingleTop = true
+                    // Restore state when reselecting a previously selected item
+                    restoreState = true
+                }
+            },
+            label = { Text(text = "Salud") },
+            icon = {
+                Icon(
+                    imageVector = Icons.Default.MonitorHeart,
+                    contentDescription = "Salud de la app"
                 )
             })
     }

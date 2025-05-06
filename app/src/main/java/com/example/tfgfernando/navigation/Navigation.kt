@@ -11,12 +11,17 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navArgument
+import com.example.tfgfernando.activities.DetalleScreen.DetalleListaEjerciciosComposable
+import com.example.tfgfernando.activities.DetalleScreen.MostrarActividadDetalle
 import com.example.tfgfernando.activities.ExercisesScreen.MostrarEjercicios
 import com.example.tfgfernando.activities.ExercisesScreen.ViewModelExercises
 import com.example.tfgfernando.activities.FormScreen.FormularioActivityCompose
+import com.example.tfgfernando.activities.SummaryScreen.MostrarHistorial
 
 
 @Composable
@@ -52,7 +57,7 @@ fun MyApp() {
                         .background(Color.White),
                     verticalArrangement = Arrangement.Center
                 ) {
-                    MostrarEjercicios()
+                    MostrarEjercicios(navController)
                 }
             }
             composable(RutasEnum.SUMMARY.nombre) {
@@ -62,9 +67,45 @@ fun MyApp() {
                         .background(Color.White),
                     verticalArrangement = Arrangement.Center
                 ) {
-                    Text("Esto son las summary")
+                    MostrarHistorial(navController)
                 }
             }
+
+            composable(RutasEnum.SALUD.nombre) {
+                Column(
+                    Modifier
+                        .fillMaxSize()
+                        .background(Color.White),
+                    verticalArrangement = Arrangement.Center
+                ) {
+                    Text(text = "Salud")
+                }
+            }
+
+            composable(
+                route = "${RutasEnum.DETALLE.nombre}/{idEjercicio}/{variable}",
+                arguments = listOf(navArgument("idEjercicio") { type = NavType.StringType },
+                    navArgument("variable") { type = NavType.StringType })) {
+                navBackStackEntry ->
+
+                val idEjercicio = navBackStackEntry.arguments?.getString("idEjercicio")
+                val variable = navBackStackEntry.arguments?.getString("variable")
+
+                MostrarActividadDetalle(idEjercicio.toString(), variable)
+            }
+
+            composable(
+                route = "${RutasEnum.LISTADODETALLE.nombre}/{idEjercicio}",
+                arguments = listOf(navArgument("idEjercicio") { type = NavType.StringType }
+                    )) {
+                    navBackStackEntry ->
+
+                val idEjercicio = navBackStackEntry.arguments?.getString("idEjercicio")
+
+                DetalleListaEjerciciosComposable(idEjercicio, navController)
+
+            }
+
         }
 
 
