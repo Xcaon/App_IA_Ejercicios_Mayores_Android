@@ -3,7 +3,7 @@ package com.example.data
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.snapshots.SnapshotStateList
 
-data class FormData (
+data class FormData(
     val chronicDiseases: SnapshotStateList<String> = mutableStateListOf(),
     val mobilityProblems: Boolean = false,
     val objectives: SnapshotStateList<String> = mutableStateListOf(),
@@ -13,7 +13,21 @@ data class FormData (
     val pasos: String = "1000",
     val distancia: String = "1000",
     val calories: String = "1000"
-)
+) {
+    fun tieneCamposVacio(): Boolean {
+        var valor = chronicDiseases.isEmpty()
+                || objectives.isEmpty()
+                || weight.isEmpty()
+                || age.isEmpty()
+//                || mobilityProblems == false
+//                || exercisedRecently == false
+//                || pasos.isEmpty()
+//                || distancia.isEmpty()
+//                || calories.isEmpty()
+
+        return valor
+    }
+}
 
 
 

@@ -26,6 +26,7 @@ import com.example.tfgfernando.activities.FormScreen.readStepsByTimeRange
 import com.example.tfgfernando.navigation.RutasEnum
 import com.google.gson.Gson
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -41,6 +42,10 @@ class ViewModelExercises @Inject constructor(val firestore: firestoreManager) : 
     // Lista de ejercicio que nos devuelve chatGpt
     val _exercises = MutableStateFlow<List<Exercise>>(emptyList())
     val exercises: StateFlow<List<Exercise>> = _exercises.asStateFlow()
+
+    // Lista de ejercicio que nos devuelve chatGpt
+    val _error = MutableStateFlow<Boolean>(false)
+    val error: StateFlow<Boolean> = _error.asStateFlow()
 
     val _pasos = MutableStateFlow<String>("")
     val pasos: StateFlow<String> = _pasos.asStateFlow()
@@ -88,7 +93,7 @@ class ViewModelExercises @Inject constructor(val firestore: firestoreManager) : 
 
     // Obtenemos los ejercicios en base a la api de OpenAI
     fun getExercises() {
-
+        _error.value = false
         viewModelScope.launch {
 
             getDatosHealthConnect()
@@ -111,7 +116,7 @@ class ViewModelExercises @Inject constructor(val firestore: firestoreManager) : 
                     maxTokens = 200
                 )
             )
-//
+
             Log.i("OpenAI", completion.choices[0].message.content.toString())
             Log.i("OpenAI", "Ha gastado en la consulta: " + completion.usage.toString())
             var respuesta = completion.choices[0].message.content.toString()
@@ -135,7 +140,8 @@ class ViewModelExercises @Inject constructor(val firestore: firestoreManager) : 
 
 
             } catch (e: Exception) {
-                Log.i("OpenAI", "Error al parsear el JSON ${e.message}")
+                Log.wtf("OpenAI", "Error al parsear el JSON ${e.message}")
+                getExercises()
             }
 
         }

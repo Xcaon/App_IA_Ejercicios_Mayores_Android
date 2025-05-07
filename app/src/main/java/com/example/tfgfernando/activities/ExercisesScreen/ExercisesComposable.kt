@@ -52,6 +52,7 @@ fun MostrarEjercicios(navController: NavController) {
     }
 
     val ejercicios: List<Exercise> by viewModel.exercises.collectAsState()
+    val error : Boolean by viewModel.error.collectAsState()
 
 //    Log.i("OpenAIFernando", "Los ejercicios son" + ejercicios.toString())
     Text(
@@ -63,33 +64,40 @@ fun MostrarEjercicios(navController: NavController) {
         fontWeight = FontWeight.Bold,
         text = "Ejercicios Recomendados"
     )
-
-        when {
-            ejercicios.isEmpty() -> {
-                Column(modifier = Modifier.fillMaxSize(),horizontalAlignment = Alignment.CenterHorizontally, verticalArrangement = Arrangement.Center) {
-                    Text(
-                        text = "Cargando ejercicios...",
-                        style = MaterialTheme.typography.bodyMedium,
-                        modifier = Modifier.padding(bottom = 16.dp)
-                    )
-                    CircularProgressIndicator()
+        if ( error == false) {
+            when {
+                ejercicios.isEmpty() -> {
+                    Column(modifier = Modifier.fillMaxSize(),horizontalAlignment = Alignment.CenterHorizontally, verticalArrangement = Arrangement.Center) {
+                        Text(
+                            text = "Cargando ejercicios...",
+                            style = MaterialTheme.typography.bodyMedium,
+                            modifier = Modifier.padding(bottom = 16.dp)
+                        )
+                        CircularProgressIndicator()
+                    }
+                }
+                else -> {
+                    LazyVerticalGrid(
+                        contentPadding = PaddingValues(horizontal = 8.dp, vertical = 12.dp),
+                        modifier = Modifier.fillMaxSize(),
+                        columns = GridCells.Fixed(2),
+                        content = {
+                            items(ejercicios.size) { item ->
+                                EjercicioCard(ejercicios[item], navController, viewModel)
+                            }
+                        })
                 }
             }
-
-            else -> {
-                LazyVerticalGrid(
-                    contentPadding = PaddingValues(horizontal = 8.dp, vertical = 12.dp),
-                    modifier = Modifier.fillMaxSize(),
-                    columns = GridCells.Fixed(2),
-                    content = {
-                        items(ejercicios.size) { item ->
-                            EjercicioCard(ejercicios[item], navController, viewModel)
-                        }
-                    })
+        } else {
+            Column (modifier = Modifier.fillMaxSize(),horizontalAlignment = Alignment.CenterHorizontally, verticalArrangement = Arrangement.Center) {
+                Text(
+                    text = "Ha ocurrido un error al cargar los ejercicios, volvemos a intentarlo",
+                    style = MaterialTheme.typography.bodyMedium,
+                    modifier = Modifier.padding(bottom = 16.dp)
+                )
+                CircularProgressIndicator()
             }
         }
-
-
 
 
 
