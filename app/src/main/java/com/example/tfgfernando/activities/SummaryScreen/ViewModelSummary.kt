@@ -20,6 +20,9 @@ class ViewModelSummary @Inject constructor(val firestore : firestoreManager) : V
     val _ejerciciosRecuperados = MutableStateFlow<List<Historial>>(emptyList())
     val ejerciciosRecuperados : StateFlow<List<Historial>> = _ejerciciosRecuperados.asStateFlow()
 
+    val _cargado = MutableStateFlow<Boolean>(false)
+    val cargado : StateFlow<Boolean> = _cargado.asStateFlow()
+
     fun getListadoEjercicio(){
         viewModelScope.launch {
 
@@ -29,10 +32,12 @@ class ViewModelSummary @Inject constructor(val firestore : firestoreManager) : V
             listadoDocumentos.let {
                 _ejerciciosRecuperados.value = listadoDocumentos!!
             }
-
-
-
+            _cargado.value = false
         }
+    }
+
+    fun switchValueCargado() {
+        _cargado.value = !_cargado.value
     }
 
     fun navegarAListadoDetalles(idEjercicio: String, navController: NavController) {

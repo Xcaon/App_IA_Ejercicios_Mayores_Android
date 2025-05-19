@@ -1,6 +1,6 @@
 package com.example.data.Responses
 
-import com.example.data.FormData
+import com.example.data.classes.FormData
 import com.example.data.classes.Exercise.Companion.listadoEjercicios
 import com.example.data.classes.Usuario
 import com.google.gson.Gson

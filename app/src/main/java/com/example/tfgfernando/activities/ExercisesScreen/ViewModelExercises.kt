@@ -12,7 +12,7 @@ import com.aallam.openai.api.model.ModelId
 import com.example.tfgfernando.openIAManager
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.NavController
-import com.example.data.FormData
+import com.example.data.classes.FormData
 import com.example.data.Responses.ExerciseRecommendationResponse
 import com.example.data.Responses.RecomendacionInput
 import com.example.data.classes.Exercise
@@ -39,6 +39,15 @@ import java.time.ZoneOffset
 @HiltViewModel
 class ViewModelExercises @Inject constructor(val firestore: firestoreManager) : ViewModel() {
 
+    val _cargando = MutableStateFlow<Boolean>(false)
+    val cargando: StateFlow<Boolean> = _cargando.asStateFlow()
+
+    val _exito = MutableStateFlow<Boolean>(false)
+    val exito: StateFlow<Boolean> = _exito.asStateFlow()
+
+    val _alerta = MutableStateFlow<Boolean>(false)
+    val alerta: StateFlow<Boolean> = _alerta.asStateFlow()
+
     // Lista de ejercicio que nos devuelve chatGpt
     val _exercises = MutableStateFlow<List<Exercise>>(emptyList())
     val exercises: StateFlow<List<Exercise>> = _exercises.asStateFlow()
@@ -60,6 +69,10 @@ class ViewModelExercises @Inject constructor(val firestore: firestoreManager) : 
 
     fun setPersonalizadoFormData(formData: FormData) {
         this.formData = formData
+    }
+
+    fun switchAlertValue() {
+        _alerta.value = !_alerta.value
     }
 
     fun getDatosHealthConnect() {
@@ -107,13 +120,14 @@ class ViewModelExercises @Inject constructor(val firestore: firestoreManager) : 
                             role = ChatRole.System,
                             content = "Eres un entrenador personal. A continuación tienes los datos de un usuario y una lista de ejercicios disponibles. \n" +
                                     "\n" +
+                                    "Toma los valores en unidades europeas, kg, cm y km\n" +
                                     "Devuélveme un JSON que contenga solo los ejercicios más recomendados para este usuario. \n" +
                                     "Devuélveme solo un JSON válido, sin explicaciones, sin texto antes o después. \n" +
-                                    "Cada objeto debe tener `id`, `title` y `reason`. No inventes ejercicios nuevos, usa solo los de la lista."
+                                    "Cada objeto debe tener `id`, `title` y `reason`. No inventes ejercicios nuevos, usa solo los de la lista. Dame 6 ejercicios minimo"
                                     + inputJson
                         )
                     ),
-                    maxTokens = 200
+                    maxTokens = 600
                 )
             )
 
@@ -134,18 +148,28 @@ class ViewModelExercises @Inject constructor(val firestore: firestoreManager) : 
                 Log.i("OpenAI", "Se han filtrado los ejercicios $ejerciciosFiltrados")
                 _exercises.value = ejerciciosFiltrados
 
-                if (_exercises.value.isNotEmpty()) {
-                    firestore.guardarEjercicios(_exercises.value)
-                }
+
 
 
             } catch (e: Exception) {
                 Log.wtf("OpenAI", "Error al parsear el JSON ${e.message}")
                 getExercises()
             }
-
         }
+    }
 
+    fun guardarEjercicios() {
+        if (_exercises.value.isNotEmpty()) {
+            viewModelScope.launch {
+               var isSaved = firestore.guardarEjercicios(_exercises.value)
+                if (isSaved) {
+                    _exito.value = true
+                } else {
+                    _exito.value = false
+                }
+                switchAlertValue() // Cambiamos el valor de la alerta para que lo quite
+            }
+        }
     }
 
     // Funcion para navegar al detalle
@@ -154,11 +178,13 @@ class ViewModelExercises @Inject constructor(val firestore: firestoreManager) : 
         try {
             var idEjercicio = ejercicio.id
             navController.navigate("${RutasEnum.DETALLE.nombre}/$idEjercicio/listado")
-
         } catch (e: Exception) {
             Log.i("OpenAI", "Error al navegar al detalle ${e.message}")
         }
+    }
 
+    fun switchCargandoValue() {
+        _cargando.value = !_cargando.value
     }
 
 

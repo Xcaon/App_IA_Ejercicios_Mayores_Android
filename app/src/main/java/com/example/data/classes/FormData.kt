@@ -1,4 +1,4 @@
-package com.example.data
+package com.example.data.classes
 
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.snapshots.SnapshotStateList
@@ -10,6 +10,7 @@ data class FormData(
     val exercisedRecently: Boolean = false,
     val weight: String = "70",
     val age: String = "40",
+    val altura : String = "170",
     val pasos: String = "1000",
     val distancia: String = "1000",
     val calories: String = "1000"
@@ -19,6 +20,7 @@ data class FormData(
                 || objectives.isEmpty()
                 || weight.isEmpty()
                 || age.isEmpty()
+                || altura.isEmpty()
 //                || mobilityProblems == false
 //                || exercisedRecently == false
 //                || pasos.isEmpty()
@@ -28,7 +30,3 @@ data class FormData(
         return valor
     }
 }
-
-
-
-

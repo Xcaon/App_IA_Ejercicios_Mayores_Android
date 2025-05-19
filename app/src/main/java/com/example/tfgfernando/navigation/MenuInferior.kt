@@ -83,10 +83,10 @@ fun MyBottomNavigation(navController: NavHostController) {
                     restoreState = true
                 }
             },
-            label = { Text(text = "Consultas") },
+            label = { Text(text = "Rutinas") },
             icon = {
                 Icon(
-                    imageVector = Icons.Default.Search,
+                    imageVector = Icons.Default.DateRange,
                     contentDescription = "seguidos"
                 )
             })

@@ -17,28 +17,24 @@ import javax.inject.Inject
 class firestoreManager @Inject constructor(var firestore: FirebaseFirestore) {
 
 
-    fun guardarEjercicios(ejercicios: List<Exercise>) {
+    suspend fun guardarEjercicios(ejercicios: List<Exercise>) : Boolean {
 
         val fechaActual = Date()
         val timestamp = Timestamp(fechaActual)
+        var resultado : Boolean = false
 
         val ejercicioRef = firestore.collection("listadoHistorial").document()
 
-        for (ejercicio in ejercicios) {
-
-            ejercicioRef.set(mapOf("fecha" to timestamp), SetOptions.merge())
-
-            ejercicioRef.collection("ejercicios").add(ejercicio)
-                .addOnSuccessListener { documentReference ->
-                    Log.d(
-                        "Firestore",
-                        "Documento de ejercicio agregado con ID: ${documentReference.id}"
-                    )
-                }
-                .addOnFailureListener { e ->
-                    Log.w("Firestore", "Error al agregar el documento de ejercicio ${e.message}")
-                }
+        return try {
+            ejercicioRef.set(mapOf("fecha" to timestamp), SetOptions.merge()).await()
+            for (ejercicio in ejercicios) {
+                ejercicioRef.collection("ejercicios").add(ejercicio).await()
+            }
+            true
+        } catch (e: Exception) {
+            false
         }
+
     }
 
     // Recuperamos los documentos de la coleccion de ejercicios

@@ -13,12 +13,21 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Check
+import androidx.compose.material.icons.filled.CheckCircle
+import androidx.compose.material.icons.filled.Favorite
+import androidx.compose.material.icons.filled.SaveAlt
+import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -47,36 +56,59 @@ fun MostrarEjercicios(navController: NavController) {
 
     var viewModel: ViewModelExercises = hiltViewModel<ViewModelExercises>()
 
-    LaunchedEffect(Unit) {
-        viewModel.getExercises()
-    }
+//    LaunchedEffect(Unit) {
+//        viewModel.getExercises()
+//    }
 
     val ejercicios: List<Exercise> by viewModel.exercises.collectAsState()
-    val error : Boolean by viewModel.error.collectAsState()
+    val error: Boolean by viewModel.error.collectAsState()
+    val exito : Boolean by viewModel.exito.collectAsState()
+    val alerta : Boolean by viewModel.alerta.collectAsState()
+    val cargando : Boolean by viewModel.cargando.collectAsState()
 
 //    Log.i("OpenAIFernando", "Los ejercicios son" + ejercicios.toString())
-    Text(
-        fontSize = 24.sp,
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(top = 12.dp, bottom = 8.dp),
-        textAlign = TextAlign.Center,
-        fontWeight = FontWeight.Bold,
-        text = "Ejercicios Recomendados"
-    )
-        if ( error == false) {
-            when {
-                ejercicios.isEmpty() -> {
-                    Column(modifier = Modifier.fillMaxSize(),horizontalAlignment = Alignment.CenterHorizontally, verticalArrangement = Arrangement.Center) {
-                        Text(
-                            text = "Cargando ejercicios...",
-                            style = MaterialTheme.typography.bodyMedium,
-                            modifier = Modifier.padding(bottom = 16.dp)
-                        )
-                        CircularProgressIndicator()
-                    }
+
+    if (error == false) {
+        when {
+            ejercicios.isEmpty() && !cargando -> {
+                Button(
+                    modifier = Modifier.fillMaxWidth().padding(horizontal = 24.dp, vertical = 12.dp),
+                    onClick = {
+                        viewModel.getExercises()
+                        viewModel.switchCargandoValue()
+                    },
+                ) {
+                    Text("Generar ejercicios en base al último formulario")
                 }
-                else -> {
+            }
+
+            ejercicios.isEmpty() && cargando -> {
+                Column(
+                    modifier = Modifier.fillMaxSize(),
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    verticalArrangement = Arrangement.Center
+                ) {
+                    Text(
+                        text = "Cargando ejercicios...",
+                        style = MaterialTheme.typography.bodyMedium,
+                        modifier = Modifier.padding(bottom = 16.dp)
+                    )
+                    CircularProgressIndicator()
+                }
+            }
+
+            else -> {
+                Text(
+                    fontSize = 22.sp,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(top = 12.dp, bottom = 8.dp),
+                    textAlign = TextAlign.Center,
+                    fontWeight = FontWeight.Bold,
+                    text = "Rutina recomendada de ejercicios"
+                )
+                Box(modifier = Modifier.fillMaxSize()) {
+
                     LazyVerticalGrid(
                         contentPadding = PaddingValues(horizontal = 8.dp, vertical = 12.dp),
                         modifier = Modifier.fillMaxSize(),
@@ -86,31 +118,68 @@ fun MostrarEjercicios(navController: NavController) {
                                 EjercicioCard(ejercicios[item], navController, viewModel)
                             }
                         })
+                    Row(modifier = Modifier
+                        .align(Alignment.BottomCenter)
+                        .fillMaxWidth()) {
+                        Button(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(horizontal = 8.dp, vertical = 4.dp)
+                                .height(50.dp),
+                            onClick = {
+                                viewModel.switchAlertValue()
+                                viewModel.guardarEjercicios()
+                            }) { // Guardamos los ejercicios al pulsar el boton
+                            Row(verticalAlignment = Alignment.CenterVertically) {
+                                if (alerta == true) {
+                                    CircularProgressIndicator(color = Color.White)
+                                    Spacer(modifier = Modifier.width(8.dp))
+                                }
+                                Text(fontSize = 18.sp, text = "GUARDAR RUTINA")
+                                Spacer(modifier = Modifier.width(8.dp))
+                                Icon(
+                                    imageVector = if (exito) Icons.Default.CheckCircle else Icons.Default.SaveAlt, // o cualquier otro
+                                    contentDescription = "Corazón",
+                                    modifier = Modifier.size(20.dp)
+                                )
+                            }
+                        }
+                    }
                 }
-            }
-        } else {
-            Column (modifier = Modifier.fillMaxSize(),horizontalAlignment = Alignment.CenterHorizontally, verticalArrangement = Arrangement.Center) {
-                Text(
-                    text = "Ha ocurrido un error al cargar los ejercicios, volvemos a intentarlo",
-                    style = MaterialTheme.typography.bodyMedium,
-                    modifier = Modifier.padding(bottom = 16.dp)
-                )
-                CircularProgressIndicator()
+
             }
         }
-
+    } else {
+        Column(
+            modifier = Modifier.fillMaxSize(),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.Center
+        ) {
+            Text(
+                text = "Ha ocurrido un error al cargar los ejercicios, volvemos a intentarlo",
+                style = MaterialTheme.typography.bodyMedium,
+                modifier = Modifier.padding(bottom = 16.dp)
+            )
+            CircularProgressIndicator()
+        }
+    }
 
 
 }
 
 @OptIn(ExperimentalGlideComposeApi::class)
 @Composable
-fun EjercicioCard(ejercicio: Exercise, navController: NavController, viewModel: ViewModelExercises) {
+fun EjercicioCard(
+    ejercicio: Exercise,
+    navController: NavController,
+    viewModel: ViewModelExercises
+) {
 
     Card(
         modifier = Modifier
             .padding(horizontal = 8.dp, vertical = 4.dp)
-            .background(Color.White).clickable {
+            .background(Color.White)
+            .clickable {
                 viewModel.navegarDetalle(ejercicio, navController)
 
             },
@@ -127,7 +196,13 @@ fun EjercicioCard(ejercicio: Exercise, navController: NavController, viewModel: 
                 contentDescription = ejercicio.title,
                 contentScale = ContentScale.Crop,
             )
-            Row(modifier = Modifier.align(Alignment.TopStart).background(Color.Black).padding(6.dp).clip(RoundedCornerShape(16.dp))) {
+            Row(
+                modifier = Modifier
+                    .align(Alignment.TopStart)
+                    .background(Color.Black)
+                    .padding(6.dp)
+                    .clip(RoundedCornerShape(16.dp))
+            ) {
                 Text(
                     fontSize = 12.sp,
                     text = ejercicio.category, // Opcional: separación del borde

@@ -29,11 +29,14 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.tfgfernando.activities.ExercisesScreen.ViewModelExercises
+import com.example.tfgfernando.ui.theme.colorCalorias
+import com.example.tfgfernando.ui.theme.colorDistancia
+import com.example.tfgfernando.ui.theme.colorRecorrido
 
 @Composable
 fun SaludComposable() {
 
-    var viewModel : ViewModelExercises = hiltViewModel<ViewModelExercises>()
+    var viewModel: ViewModelExercises = hiltViewModel<ViewModelExercises>()
 
     var pasos: State<String> = viewModel.pasos.collectAsState()
     var distancia: State<String> = viewModel.distancia.collectAsState()
@@ -42,62 +45,97 @@ fun SaludComposable() {
     // Recuperamos los datos
     viewModel.getDatosHealthConnect()
 
-    Row (modifier = Modifier.fillMaxWidth().padding(24.dp)) {
-        Text(fontWeight = FontWeight.Bold, fontSize = 24.sp ,text = "Bienvenido a tu salud")
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding( horizontal = 24.dp, vertical = 12.dp)
+    ) {
+        Text(fontWeight = FontWeight.Bold, fontSize = 32.sp, text = "Bienvenido a tu salud")
+        Text( fontSize = 22.sp, text = "Aquí encontrarás un resumen diario de tu actividad física y tus datos de salud.")
     }
 
-    Column(modifier = Modifier.fillMaxSize().padding(24.dp), verticalArrangement = Arrangement.Center) {
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(24.dp),
+        verticalArrangement = Arrangement.Center
+    ) {
 
-        Row (modifier = Modifier.fillMaxWidth()) {
-            Column(modifier = Modifier.weight(1f)) {
-                Text(fontWeight = FontWeight.Bold ,textAlign = TextAlign.Center, text = "Pasos")
-                Spacer(modifier = Modifier.height(8.dp))
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .background(Color.White)
-                        .shadow(1.dp, shape = RoundedCornerShape(2.dp))
-                ) {
-                    Column(modifier = Modifier.padding(12.dp)) {
-                        Text(fontSize = 16.sp, text = "Recorrido", style = MaterialTheme.typography.bodyMedium)
-                        Text(lineHeight = 14.sp, fontSize = 14.sp,text = "Has caminado ${pasos.value} pasos hoy", style = MaterialTheme.typography.bodyLarge)
-                    }
-                }
-                Spacer(modifier = Modifier.height(24.dp))
 
-                Text(fontWeight = FontWeight.Bold ,textAlign = TextAlign.Center,text = "Distancia")
-                Spacer(modifier = Modifier.height(8.dp))
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .background(Color.White)
-                        .shadow(1.dp, shape = RoundedCornerShape(2.dp))
-                ) {
-                    Column(modifier = Modifier.padding(12.dp)) {
-                        Text(fontSize = 16.sp, text = "Distancia", style = MaterialTheme.typography.bodyMedium)
-                        Text(lineHeight = 14.sp, fontSize = 14.sp,text = "Has recorrido ${distancia.value} metros", style = MaterialTheme.typography.bodyLarge)
-                    }
-                }
+        Text(fontWeight = FontWeight.Bold, textAlign = TextAlign.Center, text = "RECORRIDO")
+        Spacer(modifier = Modifier.height(8.dp))
+
+        Card(
+            modifier = Modifier
+                .fillMaxWidth()
+                .weight(1f),
+            colors = CardDefaults.cardColors(containerColor = colorRecorrido)
+        ) {
+            Column(
+                modifier = Modifier.fillMaxSize(),
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.Center
+            ) {
+                Text(
+                    lineHeight = 18.sp,
+                    fontSize = 24.sp,
+                    text = "Hoy has caminado ${pasos.value} pasos",
+                    style = MaterialTheme.typography.bodyLarge
+                )
             }
-            Spacer(modifier = Modifier.width(32.dp))
-            Column(modifier = Modifier.weight(1f).fillMaxWidth()) {
-                Text(fontWeight = FontWeight.Bold ,textAlign = TextAlign.Center,text = "Calorias quemadas")
-                Spacer(modifier = Modifier.height(8.dp))
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .background(Color.White)
-                        .shadow(1.dp, shape = RoundedCornerShape(2.dp))
-                ) {
-                    Column(modifier = Modifier.padding(12.dp)) {
-                        Text(fontSize = 16.sp, text = "Cantidad", style = MaterialTheme.typography.bodyMedium)
-                        Text(lineHeight = 14.sp, fontSize = 14.sp,text = "Has quemado ${calories.value} kCal", style = MaterialTheme.typography.bodyLarge)
-                    }
-                }
+        }
+
+        Spacer(modifier = Modifier.height(24.dp))
+
+        Text(fontWeight = FontWeight.Bold, textAlign = TextAlign.Center, text = "DISTANCIA")
+        Spacer(modifier = Modifier.height(8.dp))
+        Card(
+            modifier = Modifier
+                .fillMaxWidth()
+                .background(Color.White)
+                .weight(1f),
+            colors = CardDefaults.cardColors(containerColor = colorDistancia)
+        ) {
+            Column(
+                modifier = Modifier.fillMaxSize(),
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.Center
+            ) {
+
+                Text(
+                    lineHeight = 14.sp,
+                    fontSize = 24.sp,
+                    text = "Hoy has recorrido ${distancia.value} metros",
+                    style = MaterialTheme.typography.bodyLarge
+                )
+            }
+        }
+
+        Spacer(modifier = Modifier.height(32.dp))
+
+        Text(fontWeight = FontWeight.Bold, textAlign = TextAlign.Center, text = "CALORIAS QUEMADAS")
+        Spacer(modifier = Modifier.height(8.dp))
+
+        Card(
+            modifier = Modifier
+                .fillMaxWidth()
+                .weight(1f),
+            colors = CardDefaults.cardColors(containerColor = colorCalorias)
+        ) {
+            Column(
+                modifier = Modifier.fillMaxSize(),
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.Center
+            ) {
+                Text(
+                    lineHeight = 14.sp,
+                    fontSize = 24.sp,
+                    text = "Hoy has quemado ${calories.value} kCal",
+                    style = MaterialTheme.typography.bodyLarge
+                )
 
             }
         }
+
     }
-
-
 }

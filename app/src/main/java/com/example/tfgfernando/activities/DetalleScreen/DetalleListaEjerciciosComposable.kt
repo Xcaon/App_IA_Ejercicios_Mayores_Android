@@ -11,6 +11,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -35,17 +36,18 @@ fun DetalleListaEjerciciosComposable(idEjercicio: String?, navController: NavHos
     viewModel.getEjercicios(idEjercicio.toString())
 
     if ( !listado.isEmpty()) {
-        Column {
+        Column (horizontalAlignment = Alignment.CenterHorizontally) {
 
             Text(
-                fontSize = 24.sp,
+                fontSize = 32.sp,
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(top = 12.dp, bottom = 8.dp),
                 textAlign = TextAlign.Center,
                 fontWeight = FontWeight.Bold,
-                text = "Consulta de Ejercicios"
+                text = "Rutina seleccionada"
             )
+            Text(fontSize = 18.sp,textAlign = TextAlign.Center,text = "¡Hora de activarse!")
             LazyVerticalGrid(
                 contentPadding = PaddingValues(horizontal = 8.dp, vertical = 12.dp),
                 modifier = Modifier.fillMaxSize(),
