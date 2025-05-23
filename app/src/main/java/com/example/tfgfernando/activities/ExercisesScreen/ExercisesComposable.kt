@@ -56,40 +56,29 @@ fun MostrarEjercicios(navController: NavController) {
 
     var viewModel: ViewModelExercises = hiltViewModel<ViewModelExercises>()
 
-//    LaunchedEffect(Unit) {
-//        viewModel.getExercises()
-//    }
+    LaunchedEffect(Unit) {
+        viewModel.getExercises()
+    }
 
     val ejercicios: List<Exercise> by viewModel.exercises.collectAsState()
     val error: Boolean by viewModel.error.collectAsState()
     val exito : Boolean by viewModel.exito.collectAsState()
     val alerta : Boolean by viewModel.alerta.collectAsState()
-    val cargando : Boolean by viewModel.cargando.collectAsState()
 
 //    Log.i("OpenAIFernando", "Los ejercicios son" + ejercicios.toString())
 
     if (error == false) {
         when {
-            ejercicios.isEmpty() && !cargando -> {
-                Button(
-                    modifier = Modifier.fillMaxWidth().padding(horizontal = 24.dp, vertical = 12.dp),
-                    onClick = {
-                        viewModel.getExercises()
-                        viewModel.switchCargandoValue()
-                    },
-                ) {
-                    Text("Generar ejercicios en base al último formulario")
-                }
-            }
 
-            ejercicios.isEmpty() && cargando -> {
+            // Mientras este vacio cargamos el loader
+            ejercicios.isEmpty()  -> {
                 Column(
                     modifier = Modifier.fillMaxSize(),
                     horizontalAlignment = Alignment.CenterHorizontally,
                     verticalArrangement = Arrangement.Center
                 ) {
-                    Text(
-                        text = "Cargando ejercicios...",
+                    Text(fontSize = 22.sp,
+                        text = "Creando ejercicios...",
                         style = MaterialTheme.typography.bodyMedium,
                         modifier = Modifier.padding(bottom = 16.dp)
                     )
@@ -97,6 +86,7 @@ fun MostrarEjercicios(navController: NavController) {
                 }
             }
 
+            // Si no esta vacio cargamos la lista
             else -> {
                 Text(
                     fontSize = 22.sp,

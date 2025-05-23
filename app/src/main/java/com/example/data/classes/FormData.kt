@@ -19,8 +19,11 @@ data class FormData(
         var valor = chronicDiseases.isEmpty()
                 || objectives.isEmpty()
                 || weight.isEmpty()
+                || weight.length > 3
                 || age.isEmpty()
+                || age.length > 2
                 || altura.isEmpty()
+                || altura.length > 3
 //                || mobilityProblems == false
 //                || exercisedRecently == false
 //                || pasos.isEmpty()

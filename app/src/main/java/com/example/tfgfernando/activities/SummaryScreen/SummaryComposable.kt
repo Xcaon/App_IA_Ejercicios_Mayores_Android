@@ -64,7 +64,7 @@ fun MostrarHistorial(navController: NavController) {
         viewModel.switchValueCargado()
     }
 
-    Column (modifier = Modifier.fillMaxSize().padding(horizontal = 12.dp), horizontalAlignment = androidx.compose.ui.Alignment.CenterHorizontally) {
+    Column (modifier = Modifier.fillMaxSize().padding(horizontal = 12.dp), horizontalAlignment = Alignment.CenterHorizontally) {
         Text(
             fontSize = 32.sp,
             modifier = Modifier
@@ -105,6 +105,10 @@ fun MostrarHistorial(navController: NavController) {
                             val formatoDiaSemana = SimpleDateFormat("EEEE", Locale("es", "ES"))
                             val diaSemana = formatoDiaSemana.format(listado.value[index].fecha.toDate())
 
+                            val formatoDiaSemanaNumero = SimpleDateFormat("d", Locale("es", "ES"))
+                            val diaSemanaNumero = formatoDiaSemanaNumero.format(listado.value[index].fecha.toDate())
+
+
                             val formatoMes = SimpleDateFormat("MMMM", Locale("es", "ES"))
                             val mes = formatoMes.format(listado.value[index].fecha.toDate())
 
@@ -118,7 +122,7 @@ fun MostrarHistorial(navController: NavController) {
 
                             Row (modifier = Modifier.weight(1.8f).padding(12.dp)) {
                                 Column {
-                                    Text(fontSize = 22.sp, fontWeight = FontWeight.Bold, text = "Rutina de ejercicios del $diaSemana a las $fechaFormateada")
+                                    Text(fontSize = 22.sp, fontWeight = FontWeight.Bold, text = "Rutina de ejercicios del $diaSemana $diaSemanaNumero a las $fechaFormateada")
                                     Text(fontSize = 18.sp, text = "Forma parte del progreso de este mes de $mes")
                                 }
                                 Icon(

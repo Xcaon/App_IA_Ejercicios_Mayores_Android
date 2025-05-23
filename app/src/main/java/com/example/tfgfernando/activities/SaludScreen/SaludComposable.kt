@@ -50,7 +50,8 @@ fun SaludComposable() {
             .fillMaxWidth()
             .padding( horizontal = 24.dp, vertical = 12.dp)
     ) {
-        Text(fontWeight = FontWeight.Bold, fontSize = 32.sp, text = "Bienvenido a tu salud")
+        Text(textAlign = TextAlign.Center, fontWeight = FontWeight.Bold, fontSize = 32.sp, text = "Bienvenido a tu salud")
+        Spacer(modifier = Modifier.height(8.dp))
         Text( fontSize = 22.sp, text = "Aquí encontrarás un resumen diario de tu actividad física y tus datos de salud.")
     }
 
@@ -60,7 +61,6 @@ fun SaludComposable() {
             .padding(24.dp),
         verticalArrangement = Arrangement.Center
     ) {
-
 
         Text(fontWeight = FontWeight.Bold, textAlign = TextAlign.Center, text = "RECORRIDO")
         Spacer(modifier = Modifier.height(8.dp))

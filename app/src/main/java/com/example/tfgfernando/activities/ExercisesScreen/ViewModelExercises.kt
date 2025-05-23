@@ -39,8 +39,6 @@ import java.time.ZoneOffset
 @HiltViewModel
 class ViewModelExercises @Inject constructor(val firestore: firestoreManager) : ViewModel() {
 
-    val _cargando = MutableStateFlow<Boolean>(false)
-    val cargando: StateFlow<Boolean> = _cargando.asStateFlow()
 
     val _exito = MutableStateFlow<Boolean>(false)
     val exito: StateFlow<Boolean> = _exito.asStateFlow()
@@ -148,9 +146,6 @@ class ViewModelExercises @Inject constructor(val firestore: firestoreManager) : 
                 Log.i("OpenAI", "Se han filtrado los ejercicios $ejerciciosFiltrados")
                 _exercises.value = ejerciciosFiltrados
 
-
-
-
             } catch (e: Exception) {
                 Log.wtf("OpenAI", "Error al parsear el JSON ${e.message}")
                 getExercises()
@@ -183,9 +178,7 @@ class ViewModelExercises @Inject constructor(val firestore: firestoreManager) : 
         }
     }
 
-    fun switchCargandoValue() {
-        _cargando.value = !_cargando.value
-    }
+
 
 
 }

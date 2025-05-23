@@ -274,7 +274,11 @@ fun FormularioActivityCompose(navController: NavController) {
                 // Peso
                 OutlinedTextField(
                     value = weight.value,
-                    onValueChange = { weight.value = it },
+                    onValueChange = { newValue ->
+                        // Sólo actualiza si cada caracter es dígito (0–9)
+                        if (newValue.all { it in '0'..'9' }) {
+                            weight.value = newValue
+                        } },
                     label = { Text("¿Peso? (kg)") },
                     modifier = Modifier.fillMaxWidth()
                 )
@@ -282,7 +286,10 @@ fun FormularioActivityCompose(navController: NavController) {
                 // Edad
                 OutlinedTextField(
                     value = age.value,
-                    onValueChange = { age.value = it },
+                    onValueChange = { newValue ->
+                        if (newValue.all { it in '0'..'9' }) {
+                            age.value = newValue
+                        } },
                     label = { Text("¿Edad?") },
                     modifier = Modifier.fillMaxWidth()
                 )
@@ -290,8 +297,11 @@ fun FormularioActivityCompose(navController: NavController) {
                 // Altura
                 OutlinedTextField(
                     value = altura.value,
-                    onValueChange = { altura.value = it },
-                    label = { Text("¿Altura?") },
+                    onValueChange = { newValue ->
+                        if (newValue.all { it in '0'..'9' }) {
+                            altura.value = newValue
+                        } },
+                    label = { Text("¿Altura? (cm)") },
                     modifier = Modifier.fillMaxWidth()
                 )
             }

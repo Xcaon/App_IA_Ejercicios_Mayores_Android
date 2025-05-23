@@ -49,26 +49,26 @@ fun MyBottomNavigation(navController: NavHostController) {
                 )
             })
 
-        NavigationBarItem(
-            selected = index == 1,
-            onClick = {
-                index = 1
-                navController.navigate(RutasEnum.EXERCISES.nombre) {
-
-                    // launchSingleTop = true indica al NavController que si la pantalla Home ya está en la
-                    // parte superior del back stack, no se creará una nueva instancia. En su lugar, se reutilizará la instancia existente.
-                    launchSingleTop = true
-                    // Restore state when reselecting a previously selected item
-                    restoreState = true
-                }
-            },
-            label = { Text(text = "Ejercicios") },
-            icon = {
-                Icon(
-                    imageVector = Icons.Default.FitnessCenter,
-                    contentDescription = "Reservas de la app"
-                )
-            })
+//        NavigationBarItem(
+//            selected = index == 1,
+//            onClick = {
+//                index = 1
+//                navController.navigate(RutasEnum.EXERCISES.nombre) {
+//
+//                    // launchSingleTop = true indica al NavController que si la pantalla Home ya está en la
+//                    // parte superior del back stack, no se creará una nueva instancia. En su lugar, se reutilizará la instancia existente.
+//                    launchSingleTop = true
+//                    // Restore state when reselecting a previously selected item
+//                    restoreState = true
+//                }
+//            },
+//            label = { Text(text = "Ejercicios") },
+//            icon = {
+//                Icon(
+//                    imageVector = Icons.Default.FitnessCenter,
+//                    contentDescription = "Reservas de la app"
+//                )
+//            })
 
         NavigationBarItem(
             selected = index == 2,
