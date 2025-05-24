@@ -22,7 +22,10 @@ android {
 
     buildTypes {
         release {
-            isMinifyEnabled = false
+            // Solo se recomienda activarlo cuando se va a publicar el proyecto
+            // ya que la osfuscación del código genera problemas para debugear el proceso
+//            isMinifyEnabled = true
+//            isShrinkResources = true
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
