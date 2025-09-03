@@ -1,5 +1,4 @@
-# 🏋️ Senior Fitness - Android App (TFG)
-
+# 🏋️ Senior Fitness - Android App 
 **Senior Fitness** es una aplicación Android diseñada para recomendar ejercicios personalizados a personas mayores, utilizando datos de salud recogidos desde **Health Connect** y una inteligencia artificial que adapta las rutinas según las necesidades de cada usuario.  
 
 ---
