@@ -116,14 +116,15 @@ fun MostrarHistorial(navController: NavController) {
                                 GlideImage(
                                     model = listadoImagenesSemana[diaSemana],
                                     contentDescription = "Dia de la semana",
-                                    contentScale = ContentScale.Fit,
+                                    contentScale = ContentScale.FillHeight,
                                 )
                             }
 
                             Row (modifier = Modifier.weight(1.8f).padding(12.dp)) {
                                 Column {
-                                    Text(fontSize = 22.sp, fontWeight = FontWeight.Bold, text = "Rutina de ejercicios del $diaSemana $diaSemanaNumero a las $fechaFormateada")
-                                    Text(fontSize = 18.sp, text = "Forma parte del progreso de este mes de $mes")
+                                    Text(fontSize = 22.sp, fontWeight = FontWeight.Bold, text = "Rutina generada")
+                                    Text(fontSize = 16.sp, fontWeight = FontWeight.Bold, text = "$diaSemana $diaSemanaNumero a las $fechaFormateada")
+                                    Text(fontSize = 14.sp, text = "Forma parte del progreso de este mes de $mes")
                                 }
                                 Icon(
                                     imageVector = Icons.AutoMirrored.Filled.KeyboardArrowRight,

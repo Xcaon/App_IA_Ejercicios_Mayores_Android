@@ -102,7 +102,7 @@ fun Card(idEjercicio: String) {
         Spacer(modifier = Modifier.height(8.dp))
         Text(
             lineHeight = 24.sp, fontSize = 16.sp, maxLines = 3,
-            overflow = TextOverflow.Ellipsis, text = ejercicio.description
+            text = ejercicio.description
         )
     }
 
