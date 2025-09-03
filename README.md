@@ -20,3 +20,6 @@
 - **APIs:** Health Connect, OpenAI / ChatGPT API  
 - **Arquitectura:** MVVM, StateFlow  
 - **Control de versiones:** Git / GitHub  
+
+
+![Home](app/src/main/res/ScreenShot/imagenIAEjercicios.png)  
